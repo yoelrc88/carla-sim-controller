@@ -203,9 +203,20 @@ class Controller2D(object):
                 access the persistent variables declared above here. For
                 example, can treat self.vars.v_previous like a "global variable".
             """
+            # Pure Pursuit Method
+            K_dd = 1 # Look ahead gain
+            L = 3.0 # Distance between rear and front axe
             
+            track_point_x = waypoints[len(self._waypoints) - 1][0]
+            track_point_y = waypoints[len(self._waypoints) - 1][1]
+
+            rear_x = x - L / 2 * np.cos(yaw) 
+            rear_y = y - L / 2 * np.sin(yaw)
+
+            alpha = np.arctan2((track_point_y - rear_y),(track_point_x - rear_x)) - yaw
+
             # Change the steer output with the lateral controller. 
-            steer_output    = 0
+            steer_output = np.arctan((2 * L * np.sin(alpha) )/(K_dd * v))
 
             ######################################################
             # SET CONTROLS OUTPUT
